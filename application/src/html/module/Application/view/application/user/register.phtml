@@ -1,0 +1,30 @@
+<?php
+$title = 'Register user';
+$this->headTitle($title);
+?>
+<h1><?=$this->escapeHtml($title)?></h1>
+<?php
+$form->setAttribute('action', $this->url('user', ['action' => 'register']));
+$form->prepare();
+
+echo '<div>';
+echo $this->form()->openTag($form);
+echo '</div>';
+echo $this->formHidden($form->get('id'));
+echo '<div>';
+echo $this->formRow($form->get('name'));
+echo '</div>';
+echo '<div>';
+echo $this->formRow($form->get('password'));
+echo $this->formRow($form->get('confirm_password'));
+echo '</div>';
+echo '<div>';
+echo $this->formRow($form->get('sex'));
+echo '</div>';
+echo '<div>';
+echo $this->formRow($form->get('photo'));
+echo '</div>';
+echo '<div>';
+echo $this->formSubmit($form->get('submit'));
+echo '</div>';
+echo $this->form()->closeTag();

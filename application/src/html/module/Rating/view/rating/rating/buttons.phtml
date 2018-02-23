@@ -1,0 +1,22 @@
+<div>
+    <button type="button" class="btn btn-success vote" data-action="up" data-id="<?=$user->id?>" <?= $user->isVotedUp() ? 'disabled' : '' ?> >+1</button>
+    <button type="button" class="btn btn-danger vote" data-action="down" data-id="<?=$user->id?>" <?= $user->isVotedDown() ? 'disabled' : '' ?> >-1</button>
+</div>
+<script language="javascript">
+    $(document).ready(function () {
+        $('button.vote').click(function () {
+            $.ajax({
+                url: '/rating/' + $(this).data('action') + '/' + $(this).data('id'),
+                type: 'post',
+
+                success: function (data, status) {
+                    var event = new CustomEvent('vote', { detail: data});
+                    window.dispatchEvent(event);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        });
+    });
+</script>

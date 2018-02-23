@@ -1,0 +1,61 @@
+<?php
+/**
+ * @author Juriy Panasevich <elfelrandcor@gmail.com>
+ */
+
+/** @var \Community\Model\Comment[] $list */
+foreach ($list as $comment) {
+    ?>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="">
+                    <span>
+                        <a href="<?=$this->url('user', ['action' => 'show', 'id' => $comment->fromUserId])?>">
+                            <?=$comment->user->name?>
+                        </a>
+                        Написал<?=$comment->user->isFemale() ? 'а' : ''?>
+                        <?=$comment->text?>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+if ($currentUser) {
+    $form->setAttribute('action', $this->url('community', ['action' => 'add', 'id' => $id]));
+    $form->setAttribute('id', $formId = 'commentForm');
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    echo '<div>';
+    echo $this->formRow($form->get('text'));
+    echo '</div>';
+    echo $this->formSubmit($form->get('submit')->setValue('Comment'));
+    echo $this->form()->closeTag();
+}
+
+
+?>
+<script language="javascript">
+    $(document).ready(function () {
+        $('#<?=$formId?>').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '<?=$this->url('community', ['action' => 'add', 'id' => $id])?>',
+                type: 'post',
+                data: $(this).serialize(),
+                success: function (data, status) {
+                    var event = new CustomEvent('comment', { detail: data});
+                    window.dispatchEvent(event);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        });
+    });
+</script>

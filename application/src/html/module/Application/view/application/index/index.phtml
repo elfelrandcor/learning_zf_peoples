@@ -1,0 +1,26 @@
+<div class="jumbotron">
+    <h1>Welcome to <span class="zf-green">Peoples</span></h1>
+</div>
+
+<div class="row rating-container">
+
+</div>
+<script language="javascript">
+    $(document).ready(function () {
+        var reloadList = function () {
+            $.ajax({
+                url: '/rating',
+                type: 'get',
+                success: function (data, status) {
+                    $('.rating-container').html(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        };
+
+        reloadList();
+        window.addEventListener('vote', reloadList);
+    });
+</script>

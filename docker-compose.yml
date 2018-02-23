@@ -1,0 +1,44 @@
+version: '2'
+services:
+  people_db:
+    image: mariadb
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./custom-mysql.cnf:/etc/mysql/conf.d/custom-mysql.cnf
+    ports:
+      - "11100:3306"
+    restart: "no"
+
+  people_src:
+    build: ./application
+    volumes:
+      - ./application/src:/var/www
+      - ./application/php.ini:/usr/local/etc/php/php.ini
+      - ./application/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    depends_on:
+      - people_db
+    expose:
+      - "9000"
+    networks:
+      - default
+    restart: "no"
+
+  people_web:
+    image: nginx:stable
+    volumes:
+      - ./application/default.conf:/etc/nginx/conf.d/default.conf
+    volumes_from:
+      - people_src
+    ports:
+      - "10005:80"
+    depends_on:
+      - people_src
+    links:
+      - people_src
+    restart: "no"
+
+networks:
+  default:
+    driver: bridge

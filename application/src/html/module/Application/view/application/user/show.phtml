@@ -1,0 +1,70 @@
+<?php
+/** @var \Application\Model\User $user */
+?>
+<div><img height="50" width="50" src="<?=$this->basepath?>/photos/<?=$user->photo ?: 'no-avatar.png'?>" title="photo"></div>
+<?php
+    printf('<div>%s</div>', $user->isMale() ? 'М' : 'Ж');
+    if ($currentUser && $user->id == $currentUser->id) {
+        ?>
+        <div><a href="<?= $this->url('user', ['action' => 'edit', 'id' => $user->id])?>">Edit</a></div>
+        <?php
+    }
+    if ($currentUser && $user->id != $currentUser->id) {
+        ?>
+        <div class="rating-buttons"></div>
+        <?php
+    }
+?>
+<div class="rating"></div>
+
+<h5>Comments:</h5>
+<div class="comments"></div>
+
+<script language="javascript">
+    $(document).ready(function () {
+        var loadComments = function () {
+            $.ajax({
+                url: '<?=$this->url('community', ['action' => 'user', 'id' => $user->id])?>',
+                type: 'get',
+                success: function (data, status) {
+                    $('.comments').html(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        };
+        var loadRating = function () {
+            $.ajax({
+                url: '<?=$this->url('rating', ['action' => 'user', 'id' => $user->id])?>',
+                type: 'get',
+                success: function (data, status) {
+                    $('.rating').html(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        };
+        var loadButtons = function () {
+            $.ajax({
+                url: '<?=$this->url('rating', ['action' => 'buttons', 'id' => $user->id])?>',
+                type: 'get',
+                success: function (data, status) {
+                    $('.rating-buttons').html(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        };
+
+        loadButtons();
+        loadComments();
+        loadRating();
+
+        window.addEventListener('comment', loadComments);
+        window.addEventListener('vote', loadRating);
+        window.addEventListener('vote', loadButtons);
+    });
+</script>

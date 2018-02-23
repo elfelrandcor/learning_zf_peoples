@@ -1,0 +1,50 @@
+<?php
+/**
+ * @author Juriy Panasevich <elfelrandcor@gmail.com>
+ */
+
+/** @var \Application\Model\User[] $list */
+foreach ($list as $user) {
+    ?>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="">
+                    <a href="<?=$this->url('user', ['action' => 'show', 'id' => $user->id])?>">
+                        <?=$user->name?>
+                    </a>
+                    &mdash; <span class="zf-green"><?=$user->rating?></span>
+                </div>
+                <?php
+                if ($currentUser && $user->id != $currentUser->id) {
+                    ?>
+                    <div>
+                        <button type="button" class="btn btn-success vote" data-action="up" data-id="<?=$user->id?>" <?= $user->isVotedUp() ? 'disabled' : '' ?> >+1</button>
+                        <button type="button" class="btn btn-danger vote" data-action="down" data-id="<?=$user->id?>" <?= $user->isVotedDown() ? 'disabled' : '' ?> >-1</button>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
+<script language="javascript">
+    $(document).ready(function () {
+        $('button.vote').click(function () {
+            $.ajax({
+                url: '/rating/' + $(this).data('action') + '/' + $(this).data('id'),
+                type: 'post',
+                success: function (data, status) {
+                    var event = new CustomEvent('vote', { detail: data});
+                    window.dispatchEvent(event);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('Ajax request failed.');
+                }
+            });
+        });
+    });
+</script>

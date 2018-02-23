@@ -1,0 +1,27 @@
+<?php
+/**
+ * @author Juriy Panasevich <elfelrandcor@gmail.com>
+ */
+
+/** @var \Rating\Model\Rating[] $list */
+foreach ($list as $rating) {
+    ?>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="">
+                    <span><?=$rating->dateCreate?></span>
+                    <a href="<?=$this->url('user', ['action' => 'show', 'id' => $rating->fromUserId])?>">
+                        <?=$rating->fromUser->name?>
+                    </a>
+                    Поставил<?=$rating->fromUser->isFemale() ? 'а' : ''?>
+                    <span><?=$rating->isPositive() ? '+' : '-'?></span>
+                </div>
+                <?php
+
+                ?>
+            </div>
+        </div>
+    </div>
+    <?php
+}

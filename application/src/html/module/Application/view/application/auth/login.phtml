@@ -1,0 +1,24 @@
+<?php
+$title = 'Login';
+$this->headTitle($title);
+?>
+    <h1><?= $this->escapeHtml($title) ?></h1>
+<?php
+$form->setAttribute('action', $this->url('auth', ['action' => 'login']));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo '<div>';
+echo $this->formRow($form->get('name'));
+echo '</div>';
+echo '<div>';
+echo $this->formRow($form->get('password'));
+echo '</div>';
+
+echo '<div>';
+echo $this->formRow($form->get('captcha'));
+echo '</div>';
+echo '<div>';
+echo $this->formSubmit($form->get('submit')->setValue('Sign in'));
+echo '</div>';
+echo $this->form()->closeTag();
